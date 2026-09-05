@@ -1,0 +1,52 @@
+# Build results
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+App_Data/
+artifacts/
+**/bin/
+**/obj/
+*.user
+TestResults/
+coverage/
+*.trx
+
+# Rider / VS
+.idea/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Database / runtime local state
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+data/
+
+# Logs
+*.log
+logs/
+*.json.log
+
+# Secrets — NEVER commit
+*.env
+.env
+.env.local
+appsettings.Local.json
+secrets/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+TestResults/
+coverage/
+
+# Assessment brief (instructor PDF) — not part of the submission
+ITI-Dev Instructor-Task.pdf
