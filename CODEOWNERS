@@ -1,0 +1,6 @@
+# Default owners for everything in the repo.
+* @AbdelbadeaGhonamy
+
+# Docs get a second pair of eyes by convention (even solo, this file teaches the pattern).
+docs/** @AbdelbadeaGhonamy
+teaching/** @AbdelbadeaGhonamy
