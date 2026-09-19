@@ -17,8 +17,26 @@ public static class DocumentEndpoints
         var group = app.MapGroup("/api/documents");
         group.MapGet("/", ListAsync).RequireAuthorization();
         group.MapGet("/{id:guid}", DetailAsync).RequireAuthorization();
-        group.MapPost("/ingest", IngestAsync).RequireAuthorization(Roles.CanScreen);
-        group.MapPost("/ingest-corpus", IngestCorpusAsync).RequireAuthorization(Roles.CanSeed);
+        group.MapPost("/ingest", IngestAsync).RequireAuthorization(Roles.CanScreen).DisableAntiforgery();
+        group.MapPost("/ingest-corpus", IngestCorpusAsync).RequireAuthorization(Roles.CanSeed).DisableAntiforgery();
+        group.MapGet("/by-title/{title}", DetailByTitleAsync).RequireAuthorization();
+        group.MapDelete("/{id:guid}", DeleteAsync).RequireAuthorization();
+    }
+
+    private static async Task<Results<NoContent, NotFound>> DeleteAsync(
+        Guid id,
+        IHrUnitOfWork store,
+        IVectorStore vectorStore)
+    {
+        var docId = new HR.Domain.Common.DocumentId(id);
+        var doc = await store.Documents.GetByIdAsync(docId);
+        if (doc is null) return TypedResults.NotFound();
+
+        await store.Documents.DeleteAsync(doc);
+        await vectorStore.DeleteByDocumentAsync(docId);
+        await store.SaveChangesAsync();
+
+        return TypedResults.NoContent();
     }
 
     private static async Task<Ok<object>> ListAsync(
@@ -106,5 +124,26 @@ public static class DocumentEndpoints
     {
         var count = await seeder.SeedAsync(force, ct);
         return TypedResults.Ok<object>(new { ingested = count });
+    }
+
+    private static async Task<Results<Ok<object>, NotFound>> DetailByTitleAsync(
+        string title,
+        IHrUnitOfWork store)
+    {
+        var docs = await store.Documents.ListAsync(0, 500);
+        var doc = docs.FirstOrDefault(d => d.Title.Contains(title, StringComparison.OrdinalIgnoreCase) || 
+                                           title.Contains(d.Title, StringComparison.OrdinalIgnoreCase) ||
+                                           d.Id.ToString().Equals(title, StringComparison.OrdinalIgnoreCase));
+        if (doc is null) return TypedResults.NotFound();
+
+        var chunks = await store.Documents.GetChunksAsync(doc.Id);
+        var fullText = string.Join("\n\n", chunks.OrderBy(c => c.Ordinal).Select(c => c.Text));
+
+        return TypedResults.Ok<object>(new
+        {
+            id = doc.Id.ToString(),
+            title = doc.Title,
+            full_text = fullText
+        });
     }
 }

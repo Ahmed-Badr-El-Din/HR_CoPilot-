@@ -143,7 +143,8 @@ public static class WorkflowEndpoints
     private static async Task<Ok<object>> ListPendingApprovalsAsync(ICorrelationContext ctx, IHrUnitOfWork store)
     {
         var pending = await store.Approvals.ListPendingAsync();
-        var byRole = pending.Where(a => string.IsNullOrEmpty(a.AssignedRole) || ctx.Roles.Contains(a.AssignedRole)).ToArray();
+        var isSupervisor = ctx.Roles.Any(r => r is "Admin" or "Auditor");
+        var byRole = pending.Where(a => isSupervisor || string.IsNullOrEmpty(a.AssignedRole) || ctx.Roles.Contains(a.AssignedRole)).ToArray();
         var runs = new List<object>();
         foreach (var a in byRole)
         {
@@ -177,7 +178,8 @@ public static class WorkflowEndpoints
 
         var approval = await store.Approvals.GetByIdAsync(new ApprovalId(guid))
             ?? throw new ApprovalNotFoundError(id);
-        if (!string.IsNullOrEmpty(approval.AssignedRole) && !ctx.Roles.Contains(approval.AssignedRole))
+        var isSupervisor = ctx.Roles.Any(r => r is "Admin" or "Auditor");
+        if (!isSupervisor && !string.IsNullOrEmpty(approval.AssignedRole) && !ctx.Roles.Contains(approval.AssignedRole))
             throw new PolicyViolationError($"Only {approval.AssignedRole} may resolve this approval.");
 
         var status = request.Decision.Trim().ToLowerInvariant() switch
