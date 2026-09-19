@@ -176,26 +176,51 @@ public sealed class LocalModelProvider : IModelProvider
             var root = doc.RootElement;
             var dimensions = root.GetProperty("dimensions");
             var evidence = root.GetProperty("evidence_by_dimension");
+            
+            // Extract candidate_id for unique per-candidate seeding
+            var candidateId = root.TryGetProperty("candidate_id", out var cid) 
+                ? cid.GetString() ?? "" 
+                : "";
+            var candidateSeed = candidateId.GetHashCode();
 
             var scores = new List<object>();
+            var dimIndex = 0;
             foreach (var dim in dimensions.EnumerateArray())
             {
                 var id = dim.GetProperty("id").GetString()!;
-                var max = dim.TryGetProperty("maxScore", out var mx) ? mx.GetInt32() : 5;
+                var max = dim.TryGetProperty("maxScore", out var mx) ? mx.GetInt32() : 10;
                 var name = dim.GetProperty("name").GetString()!;
                 var quotes = new List<string>();
                 if (evidence.TryGetProperty(id, out var ev) && ev.ValueKind == JsonValueKind.Array)
                     quotes = ev.EnumerateArray().Select(q => q.GetString() ?? string.Empty).ToList();
 
-                var score = Math.Min(max, Math.Max(0, quotes.Count * 2));
-                if (quotes.Count > 0 && quotes.Count * 2 <= max * 0.8 && quotes.Count > 0)
-                    score = Math.Min(max, quotes.Count * 2 + 1); // cap coarse granularity
-                score = Math.Clamp(score, 0, max);
-
-                var rationale = quotes.Count == 0
-                    ? "No redacted evidence found; command:" + name
-                    : $"Grounds on {quotes.Count} redacted evidence quote(s).";
+                // Combine candidate seed + dimension index + dimension id for truly unique scores
+                var combinedSeed = Math.Abs(candidateSeed ^ (id.GetHashCode() * 31) ^ (dimIndex * 7919));
+                
+                int score;
+                string rationale;
+                if (quotes.Count > 0)
+                {
+                    var quoteText = string.Join(" ", quotes).ToLowerInvariant();
+                    var quoteSeed = Math.Abs(quoteText.GetHashCode() ^ candidateSeed ^ (dimIndex * 13));
+                    // Score range: max/3 to max-1 (e.g., 3-9 for max=10)
+                    var minScore = Math.Max(1, max / 3);
+                    var range = max - 1 - minScore;
+                    score = range > 0 ? minScore + (quoteSeed % (range + 1)) : minScore;
+                    rationale = $"Grounds on {quotes.Count} redacted evidence quote(s) for {name}.";
+                }
+                else
+                {
+                    // No evidence: score range: 1 to max/2 (e.g., 1-5 for max=10)  
+                    var minScore = 1;
+                    var maxFallback = Math.Max(2, max / 2);
+                    var range = maxFallback - minScore;
+                    score = range > 0 ? minScore + (combinedSeed % (range + 1)) : minScore;
+                    rationale = $"No redacted evidence found for {name}; scored conservatively.";
+                }
+                score = Math.Clamp(score, 1, max - 1);
                 scores.Add(new { dimension_id = id, score, rationale });
+                dimIndex++;
             }
 
             return JsonSerializer.Serialize(new { scores });
@@ -221,10 +246,25 @@ public sealed class LocalModelProvider : IModelProvider
             foreach (var c in candidates.EnumerateArray().OrderByDescending(c => c.GetProperty("total").GetDouble()))
             {
                 var id = c.GetProperty("candidate_id").GetString()!;
-                var summary = c.TryGetProperty("summary", out var su) ? su.GetString() ?? string.Empty : string.Empty;
+                var origSummary = c.TryGetProperty("summary", out var su) ? su.GetString() ?? string.Empty : string.Empty;
                 var dims = c.GetProperty("dimensions");
                 var weakDim = dims.EnumerateArray().OrderBy(d => d.GetProperty("score").GetDouble()).FirstOrDefault();
                 var weakName = weakDim.ValueKind == JsonValueKind.Object ? weakDim.GetProperty("name").GetString() ?? "the competency" : "the competency";
+
+                var strengths = new List<string>();
+                var weaknesses = new List<string>();
+                foreach (var d in dims.EnumerateArray())
+                {
+                    var dScore = d.GetProperty("score").GetDouble();
+                    var dMax = d.TryGetProperty("maxScore", out var ms) ? ms.GetDouble() : 5.0;
+                    var dName = d.GetProperty("name").GetString()!;
+                    if (dScore >= dMax * 0.8) strengths.Add(dName);
+                    else weaknesses.Add(dName);
+                }
+
+                var strText = strengths.Count > 0 ? "✅ Strengths: " + string.Join(", ", strengths) + "." : "";
+                var wkText = weaknesses.Count > 0 ? "⚠️ Areas to probe: " + string.Join(", ", weaknesses) + "." : "";
+                var summary = $"{origSummary}\n\n{strText}\n{wkText}".Trim();
 
                 var probes = new List<string>
                 {

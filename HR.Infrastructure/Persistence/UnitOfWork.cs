@@ -33,7 +33,7 @@ internal sealed class DocumentRepository(HrDbContext db) : IDocumentRepository
         => db.Documents.Include(d => d.Chunks).FirstOrDefaultAsync(d => d.ContentHash == contentHash, ct);
 
     public async Task<IReadOnlyList<Document>> ListAsync(int skip, int take, CancellationToken ct = default)
-        => await db.Documents.OrderByDescending(d => d.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.Documents.ToListAsync(ct)).OrderByDescending(d => d.CreatedAt).Skip(skip).Take(take).ToList();
 
     public Task AddAsync(Document document, CancellationToken ct = default) => db.Documents.AddAsync(document, ct).AsTask();
 
@@ -69,10 +69,10 @@ internal sealed class RunRepository(HrDbContext db) : IRunRepository
         => await db.RunEvents.Where(e => e.RunId == id).OrderBy(e => e.Sequence).ThenBy(e => e.Id).ToListAsync(ct);
 
     public async Task<IReadOnlyList<Run>> ListByUserAsync(UserId userId, int skip, int take, CancellationToken ct = default)
-        => await db.Runs.Where(r => r.OwnerUserId == userId).OrderByDescending(r => r.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.Runs.Where(r => r.OwnerUserId == userId).ToListAsync(ct)).OrderByDescending(r => r.CreatedAt).Skip(skip).Take(take).ToList();
 
     public async Task<IReadOnlyList<Run>> ListAllAsync(int skip, int take, CancellationToken ct = default)
-        => await db.Runs.OrderByDescending(r => r.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.Runs.ToListAsync(ct)).OrderByDescending(r => r.CreatedAt).Skip(skip).Take(take).ToList();
 
     public async Task<Run?> GetLatestAwaitingForRunAsync(RunId id, CancellationToken ct = default)
         => await db.Runs.FirstOrDefaultAsync(r => r.Id == id && r.Status == RunStatus.AwaitingApproval, ct);
@@ -90,10 +90,10 @@ internal sealed class ApprovalRepository(HrDbContext db) : IApprovalRepository
     public Task UpdateAsync(ApprovalRequest request, CancellationToken ct = default) { db.ApprovalRequests.Update(request); return Task.CompletedTask; }
 
     public async Task<IReadOnlyList<ApprovalRequest>> ListPendingAsync(CancellationToken ct = default)
-        => await db.ApprovalRequests.Where(a => a.Status == ApprovalStatus.Pending).OrderBy(a => a.CreatedAt).ToListAsync(ct);
+        => (await db.ApprovalRequests.Where(a => a.Status == ApprovalStatus.Pending).ToListAsync(ct)).OrderBy(a => a.CreatedAt).ToList();
 
     public async Task<IReadOnlyList<ApprovalRequest>> ListByRequesterAsync(UserId userId, int skip, int take, CancellationToken ct = default)
-        => await db.ApprovalRequests.OrderByDescending(a => a.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.ApprovalRequests.ToListAsync(ct)).OrderByDescending(a => a.CreatedAt).Skip(skip).Take(take).ToList();
 }
 
 internal sealed class SessionRepository(HrDbContext db) : ISessionRepository
@@ -102,7 +102,7 @@ internal sealed class SessionRepository(HrDbContext db) : ISessionRepository
         => await db.ChatSessions.Include(s => s.Messages).FirstOrDefaultAsync(s => s.Id == id, ct);
 
     public async Task<IReadOnlyList<ChatSession>> ListByUserAsync(UserId userId, CancellationToken ct = default)
-        => await db.ChatSessions.Where(s => s.OwnerUserId == userId).OrderByDescending(s => s.UpdatedAt).ToListAsync(ct);
+        => (await db.ChatSessions.Where(s => s.OwnerUserId == userId).ToListAsync(ct)).OrderByDescending(s => s.UpdatedAt).ToList();
 
     public Task AddAsync(ChatSession session, CancellationToken ct = default) => db.ChatSessions.AddAsync(session, ct).AsTask();
     public Task UpdateAsync(ChatSession session, CancellationToken ct = default) { db.ChatSessions.Update(session); return Task.CompletedTask; }
@@ -114,10 +114,10 @@ internal sealed class UsageRepository(HrDbContext db) : IUsageRepository
     public Task AddAsync(UsageRecord record, CancellationToken ct = default) => db.UsageRecords.AddAsync(record, ct).AsTask();
 
     public async Task<IReadOnlyList<UsageRecord>> ListByUserAsync(UserId userId, int skip, int take, CancellationToken ct = default)
-        => await db.UsageRecords.Where(u => u.UserId == userId).OrderByDescending(u => u.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.UsageRecords.Where(u => u.UserId == userId).ToListAsync(ct)).OrderByDescending(u => u.CreatedAt).Skip(skip).Take(take).ToList();
 
     public async Task<IReadOnlyList<UsageRecord>> ListAllAsync(int skip, int take, CancellationToken ct = default)
-        => await db.UsageRecords.OrderByDescending(u => u.CreatedAt).Skip(skip).Take(take).ToListAsync(ct);
+        => (await db.UsageRecords.ToListAsync(ct)).OrderByDescending(u => u.CreatedAt).Skip(skip).Take(take).ToList();
 
     public async Task<(int promptTokens, int completionTokens, decimal cost)> TotalsAsync(CancellationToken ct = default)
     {
@@ -143,7 +143,7 @@ internal sealed class BiasAuditRepository(HrDbContext db) : IBiasAuditRepository
 
     public async Task<IReadOnlyList<BiasAuditRecord>> ListByCandidateAsync(string candidateId, CancellationToken ct = default)
     {
-        var entities = await db.BiasAuditEntities.Where(b => b.CandidateId == candidateId).OrderBy(b => b.Timestamp).ToListAsync(ct);
+        var entities = (await db.BiasAuditEntities.Where(b => b.CandidateId == candidateId).ToListAsync(ct)).OrderBy(b => b.Timestamp).ToList();
         return entities.Select(e => new BiasAuditRecord(e.CandidateId, e.AttributeKind, e.Occurrences, e.Pattern, e.Timestamp)).ToList();
     }
 }

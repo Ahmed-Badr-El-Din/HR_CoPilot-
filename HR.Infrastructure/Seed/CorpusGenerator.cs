@@ -57,34 +57,11 @@ public static class CorpusGenerator
     {
         return new[]
         {
-            Doc("role-sd-am-en", DocLanguage.En, "synthetic",
-                (1, "Position Summary", "Job Title: Senior Data Analytics Manager — Take Home Test Corpus.\n\n" + "Owns end-to-end analytical delivery. Reports to the VP of Data."),
-                (2, "Responsibilities", "Responsibilities:\n- Design analytical models and cadenced reporting.\n- Lead a team of four analysts, allocate work and coach.\n- Own the tooling and subscription budget (~$120k/yr).\n- Run weekly stakeholder review meetings.\n- Deliver projects agilely (sprint planning, demos, retrospectives).\n\nRubric weights: Data Analysis 30% | Team Leadership 25% | Budget Ownership 20% | Stakeholder Communication 15% | Project Execution 10%."),
-                (3, "Qualifications", "Qualifications:\n- 7+ years in analytics or a related function.\n- Strong SQL, Python and BI tooling (Tableau, Power BI).\n- Degree in statistics or data science; MBA is a plus."),
-                (4, "Success Criteria", "Success criteria: 95% on-time reporting; measurable decision impact; zero compliance incidents."),
-                (5, "Outcome", "Outcome: evidence-based decisions across the retail business.")),
-            Doc("role-sd-am-ar", DocLanguage.Ar, "synthetic",
-                (1, "ملخص الدور", "المسمى الوظيفي: مدير تحليلات البيانات.\n\nملخص: المسؤولية عن التحويل الطلبة إلى نماذج تحليلية قابلة للتنفيذ، وإعداد تقارير دورية للإدارة العليا باستخدام البيانات الضخمة."),
-                (2, "المسؤوليات", "المسؤوليات:\n• إعداد نماذج تحليلية وتقارير دورية بالاعتماد على SQL وPython.\n• قيادة فريق من المحللين وتوزيع المهام والتدريب.\n• إدارة ميزانية الأدوات والاشتراكات (نحو 120 ألف دولار سنوياً).\n• عقد اجتماعات أسبوعية مع أصحاب المصلحة.\n• تنفيذ المشاريع وفق منهجية أجايل.\n\nأوزان معايير التحكيم: تحليل البيانات 30%، قيادة الفريق 25%، إدارة الميزانية 20%، التواصل مع أصحاب المصلحة 15%، تنفيذ المشاريع 10%."),
-                (3, "المؤهلات", "المؤهلات:\n• خبرة لا تقل عن 7 سنوات في التحليل.\n• إجادة SQL وPython وأدوات ذكاء الأعمال.\n• درجة جامعية في الإحصاء أو علوم البيانات."),
-                (4, "معايير النجاح", "معايير النجاح: دقة التقارير في الموعد بنسبة 95%، وأثر ملموس في القرارات، وخلو قياسي من مخالفات الامتثال."),
-                (5, "النتيجة المتوقعة", "النتيجة المتوقعة: قرارات مبنية على الأدلة عبر الأعمال التجارية.")),
-            Doc("role-project-manager", DocLanguage.En, "synthetic",
-                (1, "Position Summary", "Job Title: Construction Project Manager.\n\nDelivers mid-size construction projects on budget and on schedule for a regional contractor."),
-                (2, "Responsibilities", "Responsibilities:\n- Baseline schedules (MS Project), critical-path tracking.\n- Cost control: weekly earned-value review, change-order discipline.\n- Enforce site safety prerequisites before any work order is issued.\n- Coordinate subcontractors and stakeholders.\n\nRubric weights: Schedule 30% | Cost Control 25% | Safety Compliance 25% | Stakeholder Communication 20%."),
-                (3, "Qualifications", "Qualifications:\n- 8+ years construction PM; PMP preferred.\n- Demonstrated delivery of projects over $5M.\n- Strong safety record with zero lost-time incidents over 3 years.")),
-            Doc("role-hr-business-partner", DocLanguage.En, "synthetic",
-                (1, "Position Summary", "Job Title: HR Business Partner.\n\nBridges workforce strategy and operations for a 1,200-employee manufacturing unit."),
-                (2, "Responsibilities", "Responsibilities:\n- Workforce planning with annual headcount forecasts.\n- Employee relations: grievances, performance improvement plans, engagement surveys.\n- Talent acquisition: manage hiring manager intake, pipelining.\n- People analytics: attrition, time-to-hire, training ROI reports.\n\nRubric weights: Workforce Planning 30% | Employee Relations 25% | Talent Acquisition 25% | Analytics 20%.")),
-            Doc("role-devops-engineer", DocLanguage.En, "synthetic",
-                (1, "Position Summary", "Job Title: DevOps Engineer.\n\nBuilds and maintains the CI/CD platform and cloud infrastructure."),
-                (2, "Responsibilities & Rubric", "Responsibilities:\n- CI/CD pipelines (GitHub Actions, ArgoCD).\n- Kubernetes cluster operations and capacity planning.\n- Infrastructure as Code with Terraform.\n- Secret management and security scanning.\n\nRubric weights: CI/CD 30% | Cloud Platforms 25% | Infrastructure as Code 25% | Security 20%.")),
-            Doc("role-financial-controller", DocLanguage.En, "synthetic",
-                (1, "Position Summary", "Job Title: Financial Controller.\n\nOwns month-end close, external audits and management reporting for a multinational subsidiary."),
-                (2, "Responsibilities & Rubric", "Responsibilities:\n- Close books under GAAP within 6 business days.\n- Lead annual budgeting and quarterly forecasts.\n- Manage audit readiness and controls documentation.\n- Lead a team of four accountants.\n\nRubric weights: Reporting Accuracy 30% | Audit Readiness 25% | Budgeting 25% | Team Leadership 20%.")),
-            Doc("role-supply-chain-analyst-ar", DocLanguage.Ar, "synthetic",
-                (1, "ملخص الدور", "المسمى الوظيفي: محلل سلسلة التوريد.\n\nمسؤول عن رفع كفاءة المخزون وخفض تكلفة التوريد في شركة توزيع إقليمية."),
-                (2, "المسؤوليات والأوزان", "المسؤوليات:\n• إدارة المخزون ومراقبة مستويات الأمان.\n• تحليل تكلفة الشحن والموردين شهرياً.\n• تنسيق جدول التسليم مع المستودعات والموردين.\n• إعداد تقارير أداء شهرية للإدارة.\n\nأوزان معايير التحكيم: إدارة المخزون 30%، تحليل التكلفة 25%، تنسيق الموردين 25%، تقارير الأداء 20%.")),
+            Doc("role-dotnet-fullstack", DocLanguage.En, "synthetic",
+                (1, "Position Summary", "Job Title: Full Stack .NET Developer.\n\nDesigns, develops, and maintains scalable web applications using .NET Core, C#, and modern frontend frameworks like React or Angular."),
+                (2, "Responsibilities", "Responsibilities:\n- Develop backend APIs using ASP.NET Core and Entity Framework Core.\n- Build responsive frontend UIs using React or Angular.\n- Design and optimize SQL Server databases.\n- Implement CI/CD pipelines and deploy to Azure.\n- Collaborate with product owners and QA.\n\nRubric weights: Backend Development 30% | Frontend Development 25% | Database Design 20% | Cloud & DevOps 15% | Team Collaboration 10%."),
+                (3, "Qualifications", "Qualifications:\n- 5+ years of experience in .NET/C# development.\n- 3+ years of experience with React or Angular.\n- Strong knowledge of SQL Server and RESTful APIs.\n- Experience with Azure (App Services, Azure SQL, Blob Storage)."),
+                (4, "Success Criteria", "Success criteria: high-quality code delivery, successful deployments to production, and excellent team collaboration.")),
         };
     }
 
@@ -121,32 +98,15 @@ public static class CorpusGenerator
         return docs;
     }
 
-    private static readonly (int, string, string, int, string, string, string, string, string, string, int, int, string, string, string, int)[] ArCandidates =
-    {
-        (1, "أحمد حسن", "ahmed-hassan-ar", 34, "ذكر", "مصري", "متزوج", "مسلم", "بكالوريوس إحصاء وعلوم بيانات", "بكالوريوس الإحصاء", 198, 10, "تحليل البيانات الكبيرة وتطوير التقارير بلغة SQL وPython ولوحات Power BI، وقيادة فريق محللين، وتنفيذ مشاريع أجايل", "شهادة تحليلات بيانات مؤسساتية", "إدارة التحليلات في شركة تجزئة كبرى", 220000),
-        (2, "منى سعيد", "mona-saeed-ar", 28, "أنثى", "مصرية", "أعزب", "مسلمة", "ماجستير إدارة الأعمال", "ماجستير إدارة الأعمال", 175, 6, "إعداد التقارير الإدارية وتحليل التكلفة والعائد، وإدارة ميزانية أدوات بإجمالي 90 ألف دولار، وقيادة فرق عمل صغيرة", "شهادة PMP", "قطاع الخدمات المالية", 180000),
-        (3, "خالد إبراهيم", "khaled-ibrahim-ar", 41, "ذكر", "سعودي", "متزوج", "مسلم", "بكالوريوس هندسة برمجيات", "بكالوريوس هندسة", 205, 15, "إدارة مشاريع البرمجيات، تحليل البيانات، التواصل مع أصحاب المصلحة أسبوعياً، وقيادة ادوات CI/CD", "شهادة AWS Solutions Architect", "شركة تقنية إقليمية", 260000),
-        (4, "سارة عبد الرحمن", "sara-abdelrahman-ar", 31, "أنثى", "أردنية", "مطلقة", "مسلمة", "بكالوريوس اقتصاد", "بكالوريوس اقتصاد", 188, 8, "تحليل البيانات المالية والتقارير الربعية، وميزانية تشغيلية قدرها 140 ألف دولار، والتخطيط لأولويات الفريق", "شهادة CFA مستوى أول", "بنك إقليمي", 210000),
-        (5, "مريم فؤاد", "mariam-fouad-ar", 36, "أنثى", "مصرية", "متزوجة", "مسيحية", "دبلوم إدارة موارد بشرية", "دبلوم موارد بشرية", 160, 9, "التخطيط للقوى العاملة، وإدارة الشكاوى، ومسوح الرضا، وتحليلات دوران الموظفين", "دبلوم علاقات عمل", "مجموعة صناعية", 150000),
-        (6, "ياسر محمود", "yasser-mahmoud-ar", 38, "ذكر", "مصري", "متزوج", "مسلم", "بكالوريوس علوم حاسب", "بكالوريوس علوم حاسب", 193, 11, "إدارة سلسلة التوريد والمخزون، تحليل التكلفة، وتنسيق الموردين، وإعداد تقارير الأداء", "شهادة قيادة عمليات", "شركة توزيع", 170000),
-        (7, "هدى ناصر", "huda-nasser-ar", 29, "أنثى", "تونسية", "أعزب", "مسلمة", "ماجستير تسويق", "ماجستير تسويق", 182, 5, "تحليل بيانات السوق، إدارة الميزانية الإعلانية، والتقارير لصنّاع القرار", "شهادة تحليلات تسويقية", "وكالة إعلانات", 120000),
-        (8, "مصطفى علي", "mostafa-ali-ar", 45, "ذكر", "مصري", "مطلق", "مسلم", "بكالوريوس محاسبة", "بكالوريوس محاسبة", 199, 18, "الإدارة المالية والمراجعة وإعداد الميزانيات، وقيادة أربعة محاسبين، وجاهزية التدقيق الخارجي", "زمالة محاسبة ACCA", "شركة متعددة الجنسيات", 300000),
-        (9, "ليلى عمر", "laila-omar-ar", 33, "أنثى", "لبنانية", "متزوجة", "مسلمة", "بكالوريوس إدارة أعمال", "بكالوريوس إدارة أعمال", 176, 7, "إدارة المشاريع وتنفيذ أجايل، وإعداد تقارير الأداء، وإدارة المخاطر بالمخزون", "شهادة أجايل سكروم", "شركة لوجيستية", 155000),
-        (10, "طارق حسن", "tarek-hassan-ar", 40, "ذكر", "سوداني", "متزوج", "مسلم", "بكالوريوس إحصاء", "بكالوريوس إحصاء", 190, 12, "التحليل الإحصائي وتصميم التجارب، ولوحات المؤشرات، وإعداد التقارير الشهرية", "شهادة تحليل البيانات", "معمل أبحاث", 130000),
-    };
+    private static readonly (int, string, string, int, string, string, string, string, string, string, int, int, string, string, string, int)[] ArCandidates = Array.Empty<(int, string, string, int, string, string, string, string, string, string, int, int, string, string, string, int)>();
 
     private static readonly (int, string, string, int, string, string, string, string, string, string, int, int, string, string, string, int)[] EnCandidates =
     {
-        (1, "James Carter", "james", 37, "Male", "British", "Married", "Christian", "MSc Data Science, UCL", "MSc Data Science", 142, 12, "big data pipelines, SQL and Python, Power BI dashboards, leading a team of five analysts, agile delivery", "Tableau Certified Analyst", "National Retail Group", 180),
-        (2, "Fatima Al-Rashid", "fatima", 30, "Female", "Emirati", "Single", "Muslim", "MBA, American University in Dubai", "MBA", 178, 7, "management reporting, cost-benefit analysis, budget ownership of $95k tooling budget, leading cross-functional workshops", "PMP", "Regional Fintech", 175),
-        (3, "Robert Lee", "robert", 44, "Male", "American", "Divorced", "Christian", "BSc Civil Engineering", "BSc Civil Engineering", 201, 18, "construction scheduling with critical-path analysis, earned-value cost control, site safety enforcement, subcontractor coordination", "PMP; CCM", "Infrastructure Contractor", 400),
-        (4, "Aisha Bello", "aisha", 32, "Female", "Nigerian", "Married", "Muslim", "MSc Statistics, Lagos University", "MSc Statistics", 166, 8, "statistical experimentation, survey analysis, monthly performance reporting, stakeholder communication", "Lean Six Sigma Black Belt", "Telecom Operator", 140),
-        (5, "Daniel Kovač", "daniel", 39, "Male", "Croatian", "Married", "Christian", "BSc Computer Science", "BSc Computer Science", 185, 10, "CI/CD pipelines, Kubernetes operations, Terraform, secret management and security scanning", "CKA; AWS DevOps Pro", "SaaS Platform Vendor", 160),
-        (6, "Maria Fernandez", "maria", 35, "Female", "Spanish", "Single", "Christian", "MA Human Resources, Madrid", "MA HR", 159, 9, "workforce planning, employee relations and grievances, talent acquisition pipelining, people-analytics reports", "SHRM-SCP", "Manufacturing Group", 150),
-        (7, "Omar Al-Farsi", "omar", 28, "Male", "Omani", "Single", "Muslim", "BSc Finance, SQU", "BSc Finance", 172, 6, "month-end close under IFRS, budgeting and forecasting, audit readiness documentation", "ACCA Part 2", "Multinational Subsidiary", 130),
-        (8, "Priya Sharma", "priya", 41, "Female", "Indian", "Married", "Hindu", "CA India", "Chartered Accountant", 181, 14, "GAAP close within six days, external audit coordination, managing a team of four accountants", "CA; CFA Level 2", "Global Ops Centre", 220),
-        (9, "Tom O'Connor", "tom", 46, "Male", "Irish", "Married", "Christian", "BEng Civil & Structural", "BEng Civil", 198, 20, "project delivery over $10M, earned value and change control, zero lost-time incidents over four years", "PMP; NEBOSH", "Major Contractor", 350),
-        (10, "Yara Khalil", "yara", 34, "Female", "Lebanese", "Divorced", "Muslim", "MBA, AUC", "MBA", 170, 9, "supply chain and inventory management, cost analysis, supplier coordination, monthly performance dashboards", "CSCP", "Regional Distributor", 145),
+        (1, "Michael Chen", "michael", 31, "Male", "Canadian", "Single", "None", "BSc Computer Science", "BSc CS", 160, 6, "ASP.NET Core, C#, React, TypeScript, SQL Server, Azure App Services, Entity Framework", "Microsoft Certified: Azure Developer Associate", "TechNova Solutions", 0),
+        (2, "Sarah Jenkins", "sarah", 29, "Female", "American", "Married", "Christian", "BSc Software Engineering", "BSc SE", 150, 5, "C#, .NET 6, Angular, TypeScript, PostgreSQL, Docker, GitHub Actions", "AWS Certified Developer", "CloudScale Inc", 0),
+        (3, "David Rodriguez", "david", 35, "Male", "Mexican", "Married", "Catholic", "MSc Computer Science", "MSc CS", 180, 10, "ASP.NET MVC, .NET Core, React, Redux, SQL Server, Azure DevOps, Redis", "Microsoft Certified: Azure Solutions Architect", "FinTech Global", 0),
+        (4, "Emily Watson", "emily", 27, "Female", "British", "Single", "None", "BSc Information Technology", "BSc IT", 140, 4, "C#, ASP.NET Web API, Vue.js, JavaScript, MySQL, IIS", "None", "WebWorks Agency", 0),
+        (5, "James Smith", "james", 33, "Male", "Australian", "Divorced", "None", "BSc Computer Science", "BSc CS", 170, 8, "C#, .NET Core, React, Next.js, MongoDB, Azure Kubernetes Service, Terraform", "Certified Kubernetes Application Developer", "Enterprise Systems Ltd", 0),
     };
 
     // ------------------------------------------------------------------ POLICIES
