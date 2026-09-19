@@ -10,7 +10,7 @@ public sealed class RubricDimension
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public double Weight { get; set; } = 1.0;
-    public int MaxScore { get; set; } = 5;
+    public int MaxScore { get; set; } = 10;
 }
 
 public sealed class Rubric
