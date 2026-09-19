@@ -42,8 +42,9 @@ public sealed class RubricScorerAgent
         var systemPrompt = services.Prompts.GetPrompt("agents/rubric-scoring", 1);
         var rubricBlock = JsonSerializer.Serialize(new
         {
+            candidate_id = candidateId,
             role = request.Role.Title,
-            dimensions = request.Rubric.Dimensions.Select(d => new { d.Id, d.Name, d.Description, d.MaxScore, d.Weight }),
+            dimensions = request.Rubric.Dimensions.Select(d => new { id = d.Id, name = d.Name, description = d.Description, maxScore = d.MaxScore, weight = d.Weight }),
             evidence_by_dimension = evidenceByDimension,
         });
 
@@ -79,10 +80,10 @@ public sealed class RubricScorerAgent
             var rawScore = parsed.TryGetValue(dim.Id, out var s) ? s.Score : double.NaN;
             var clamped = double.IsNaN(rawScore) ? 0 : Math.Clamp(rawScore, 0, dim.MaxScore);
             var rationale = parsed.TryGetValue(dim.Id, out var r) ? r.Rationale : "No evidence found; scored zero on redacted evidence.";
-            dimensionScores.Add(new DimensionScore(dim.Id, clamped, dim.MaxScore, rationale));
+            dimensionScores.Add(new DimensionScore(dim.Id, Math.Round(clamped, 1), dim.MaxScore, rationale));
         }
 
-        var total = RubricMath.WeightedTotal(dimensionScores.Select(d => (d.DimensionId, weightByDim[d.DimensionId], d.MaxScore)));
+        var total = RubricMath.WeightedTotal(dimensionScores.Select(d => (d.DimensionId, weightByDim[d.DimensionId], d.Score)));
         var maxTotal = RubricMath.WeightedTotal(maxByDim.Select(kv => (kv.Key, weightByDim[kv.Key], kv.Value)));
         if (maxTotal <= 0) maxTotal = request.Rubric.Dimensions.Sum(d => (double)d.MaxScore);
 
@@ -97,7 +98,7 @@ public sealed class RubricScorerAgent
         var scorerInputSnapshot = JsonSerializer.Serialize(new
         {
             role = request.Role.Title,
-            dimensions = request.Rubric.Dimensions.Select(d => new { d.Id, d.Name, d.Description, d.MaxScore, d.Weight }),
+            dimensions = request.Rubric.Dimensions.Select(d => new { id = d.Id, name = d.Name, description = d.Description, maxScore = d.MaxScore, weight = d.Weight }),
             evidence_by_dimension = evidenceByDimension,
             evidence_chunks = extraction.Chunks.Select(c => new { c.ChunkId, c.DocumentId, c.DocumentTitle, c.Section, c.PageReference, c.SanitizedText }),
         });

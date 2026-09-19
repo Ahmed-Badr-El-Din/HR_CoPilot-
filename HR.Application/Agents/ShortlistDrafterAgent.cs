@@ -43,7 +43,7 @@ public sealed class ShortlistDrafterAgent
                 total = s.Total,
                 max = s.MaxTotal,
                 summary = s.Summary,
-                dimensions = s.Dimensions.Select(d => new { d.DimensionId, name = request.Rubric.Dimensions.FirstOrDefault(r => r.Id == d.DimensionId)?.Name, d.Score, d.MaxScore, d.Rationale }),
+                dimensions = s.Dimensions.Select(d => new { dimensionId = d.DimensionId, name = request.Rubric.Dimensions.FirstOrDefault(r => r.Id == d.DimensionId)?.Name, score = d.Score, maxScore = d.MaxScore, rationale = d.Rationale }),
             }),
         });
 
