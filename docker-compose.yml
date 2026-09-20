@@ -1,0 +1,38 @@
+# HR Copilot (D6T1) — containerised API + corpus seed.
+# Brings up the API fully seeded: EF migrations applied, demo accounts created,
+# and the 36-document corpus ingested with the deterministic `local` provider.
+#
+#   docker compose up --build
+#   curl http://localhost:8080/healthz        -> ok
+#   docs: http://localhost:8080/swagger
+#
+# To use a hosted model instead, override LLM__FALLBACKORDER and LLM__APIKEY in
+# your shell or env_file; option binding follows the double-underscore section
+# naming documented in AGENTS.md.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hr-copilot:latest
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Storage__ConnectionString: Data Source=/data/hr.db
+      Ingestion__SeedCorpusOnStartup: "true"
+      Llm__FallbackOrder: "${LLM__FALLBACKORDER:-local}"
+      Llm__ApiKey: "${LLM__APIKEY:-}"
+      Auth__JwtSigningKey: "${AUTH__JWTSIGNINGKEY:-ContainerDevOnlyChangeMe__at_least_32_chars_length}"
+    volumes:
+      - hr-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  hr-data:
