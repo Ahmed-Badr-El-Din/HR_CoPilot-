@@ -181,9 +181,9 @@ public sealed class RubricScorerAgent
     private static string BuildSummary(double total, double maxTotal, int dimensionCount)
     {
         var percent = maxTotal <= 0 ? 0 : total / maxTotal;
-        return percent >= 0.8 ? $"Strong fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
-            : percent >= 0.6 ? $"Good fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
-            : percent >= 0.4 ? $"Partial fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
+        return percent >= 0.75 ? $"Strong fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
+            : percent >= 0.55 ? $"Good fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
+            : percent >= 0.35 ? $"Partial fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions."
             : $"Weak fit: {total:F1}/{maxTotal:F1} across {dimensionCount} dimensions.";
     }
 }
