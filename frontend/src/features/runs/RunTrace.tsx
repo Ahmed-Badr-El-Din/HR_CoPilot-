@@ -25,9 +25,9 @@ export function RunTrace() {
       const res = await apiClient.get(`/api/runs/${id}`);
       return res.data;
     },
-    refetchInterval: (data) => {
-      if (!data) return 5000;
-      return data.status === 'Running' ? 5000 : false;
+    refetchInterval: (query) => {
+      if (!query.state.data) return 5000;
+      return query.state.data.status === 'Running' ? 5000 : false;
     }
   });
 

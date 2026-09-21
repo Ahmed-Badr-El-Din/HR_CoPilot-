@@ -152,8 +152,8 @@ function ShortlistPreview({ payload, isEn }: { payload: any; isEn: boolean }) {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-  };
+    show: { opacity: 1, y: 0, transition: { stiffness: 300, damping: 24 } }
+  } as any;
 
   return (
     <div className="space-y-5 relative">
