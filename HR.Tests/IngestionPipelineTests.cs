@@ -29,7 +29,7 @@ public sealed class IngestionPipelineTests
         using var db = new TestDb();
         var ctx = db.OpenContext();
         var service = CreateService(ctx);
-        var doc = CorpusGenerator.Generate().First(d => d.FileName == "role-sd-am-en.json");
+        var doc = CorpusGenerator.Generate().First(d => d.FileName == "role-dotnet-fullstack.json");
 
         var bytes = Encoding.UTF8.GetBytes(doc.JsonContent);
         var first = await service.IngestAsync(doc.FileName, new MemoryStream(bytes), new SystemCorrelationContext("ingest-1"), CancellationToken.None);
@@ -48,7 +48,7 @@ public sealed class IngestionPipelineTests
         using var db = new TestDb();
         var ctx = db.OpenContext();
         var service = CreateService(ctx);
-        var doc = CorpusGenerator.Generate().First(d => d.FileName == "role-devops-engineer.json");
+        var doc = CorpusGenerator.Generate().First(d => d.FileName == "role-dotnet-fullstack.json");
 
         var result = await service.IngestAsync(
             doc.FileName,
