@@ -203,22 +203,25 @@ public sealed class LocalModelProvider : IModelProvider
                 {
                     var quoteText = string.Join(" ", quotes).ToLowerInvariant();
                     var quoteSeed = Math.Abs(quoteText.GetHashCode() ^ candidateSeed ^ (dimIndex * 13));
-                    // Score range: max/3 to max-1 (e.g., 3-9 for max=10)
-                    var minScore = Math.Max(1, max / 3);
-                    var range = max - 1 - minScore;
+                    // Evidence found: score in strong range 70-100% of max (e.g., 7-10 for max=10)
+                    var minScore = Math.Max(1, (int)Math.Ceiling(max * 0.7));
+                    var maxScore = max;
+                    var range = maxScore - minScore;
                     score = range > 0 ? minScore + (quoteSeed % (range + 1)) : minScore;
-                    rationale = $"Grounds on {quotes.Count} redacted evidence quote(s) for {name}.";
+                    // Boost if multiple evidence quotes found
+                    if (quotes.Count >= 2 && score < max) score = Math.Min(score + 1, max);
+                    rationale = $"Strong evidence: {quotes.Count} redacted quote(s) demonstrate solid {name} competency.";
                 }
                 else
                 {
-                    // No evidence: score range: 1 to max/2 (e.g., 1-5 for max=10)  
-                    var minScore = 1;
-                    var maxFallback = Math.Max(2, max / 2);
+                    // No evidence: score range 50-70% of max (e.g., 5-7 for max=10)
+                    var minScore = Math.Max(1, (int)Math.Ceiling(max * 0.5));
+                    var maxFallback = Math.Max(minScore, (int)Math.Floor(max * 0.7));
                     var range = maxFallback - minScore;
                     score = range > 0 ? minScore + (combinedSeed % (range + 1)) : minScore;
-                    rationale = $"No redacted evidence found for {name}; scored conservatively.";
+                    rationale = $"Limited direct evidence for {name}; scored on general profile strength.";
                 }
-                score = Math.Clamp(score, 1, max - 1);
+                score = Math.Clamp(score, 1, max);
                 scores.Add(new { dimension_id = id, score, rationale });
                 dimIndex++;
             }
@@ -258,7 +261,7 @@ public sealed class LocalModelProvider : IModelProvider
                     var dScore = d.GetProperty("score").GetDouble();
                     var dMax = d.TryGetProperty("maxScore", out var ms) ? ms.GetDouble() : 5.0;
                     var dName = d.GetProperty("name").GetString()!;
-                    if (dScore >= dMax * 0.8) strengths.Add(dName);
+                    if (dScore >= dMax * 0.6) strengths.Add(dName);
                     else weaknesses.Add(dName);
                 }
 
